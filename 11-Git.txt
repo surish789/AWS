@@ -1,0 +1,55 @@
+Git:
+-It is a Distributed Vesion control system
+-Source code manage control tool
+-Developed by microsoft
+
+git hub(Central/remote)
+git bash (local)
+
+there are 3 stages in local
+1-Working area
+2-Staging area
+3-Local repository
+
+Configuration:
+--------------
+git config --global user.name "name"
+git config --global user.mail "mail"
+
+
+Commands:
+---------
+git clone "git repo url" -> central repo pull to local
+git fork -> Private git repo pull to our git hub
+MKDIR -> Make direction
+CD -> Change Directory
+Touch -> Crete files
+Cat >> -> create and checkout
+Vi -> edit the file
+Git status -> check status
+Git add ./*/file name -> Working area to staging area
+git commit -m "message" ->staging area to local repo
+git push origin-> local repo to central repo
+git checkout "filename" -> Undo changes in working area
+git reset "filename" -> Undo changes in staging area
+git reste "commitID" -> Undo changes in Local repo
+git branch "branch name" -> create branch
+git checkout "branch name" -> Switched to other branch
+git branch -d "branch name" -> Delete branch
+git push origin "branch name"-> Local to remote
+git push --set-upstream origin "branch name"-> New branch code add/edit
+
+Git install through linux
+--------------------------
+crete on ec2 instance-Connect through putty
+yum install -y git
+git clone "url"
+(it will ask U-id and password)
+set remote url------
+git hub->profile settings->dev settings->Personal access token->Generate token-> give name -> expire-> copy token
+git remote set-url origin https://"Paste token"github.com/pavananingi/"reponame".git
+git push -u origin master
+git push origin master
+
+
+

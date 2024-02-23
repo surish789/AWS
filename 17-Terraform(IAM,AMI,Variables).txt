@@ -1,0 +1,200 @@
+1)->IAM-Role:Terraform registry->AWS->Documentation->IAM_role-> Copy 
+  Give provider code and IAM_role,aws_iam_role_policy,
+---------------------------------------------------------------------------
+provider "aws" {
+  region     = "us-east-1"
+  access_key = "AKIAW4OFZFTU4OKJDOOO"
+  secret_key = "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"
+}
+resource "aws_iam_role" "test_role" {
+  name = "test_role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  tags = {
+    tag-key = "tag-value"
+  }
+}
+resource "aws_iam_role_policy" "test_policy" {
+  name = "test_policy"
+  role = aws_iam_role.test_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ec2:Describe*",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+Check: IAM->Roles-> test code->Policy's
+-------------------------------------------------------------------------
+2)->Difference between Inline policy and customised policy
+
+->customised policy: AWS Already created we need to use that.
+->Inline policy: We need to give Seperate access (Read,write,List,execute).
+-------------------------------------------------------------------------
+Resource: Its a phisical infrastructure(we can see in the console)
+Data source: It will create phisically but it won't available in the console
+             but it can provide atributes and arguments
+arguments: AMI, Public IP's, Availabilties
+Attributes: after created the resourses we can have attributes.
+----------------------------------------------------------------------------
+-> Create AMI through data source :
+
+data "aws_ami" "app_ami" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm*"]
+  }
+}
+resource "aws_instance" "devops-1" {
+  ami           = data.aws_ami.app_ami.id
+  instance_type = var.instance_type[0]
+}
+resource "aws_instance" "devops-2" {
+  ami           = data.aws_ami.app_ami.id
+  instance_type = var.instance_type[2]
+}
+resource "aws_instance" "devops-3" {
+  ami           = data.aws_ami.app_ami.id
+  instance_type = var.instance_type[1]
+}
+
+Check:Ec2->instances-> check tags and AMI ID
+----------------------------------------------------------------------------
+
+3)Variables: If we have a 1000 lines of code, now we need to chnage that code it will take lot of time,
+and also we got errors, so that time we need to declare variable files.
+->In terraform using variables we can deploy more dynamic terraform configuration(variable.tf)/(terraform.tfvars)
+->We can seperate and define inputs(Ip's,VPC name,Snet name) in this file.
+
+----------------------------------------------------------------------------------------
+->Provider.tf:
+
+provider "aws" {
+  access_key = var.AWS_ACCESS_KEY
+  secret_key = var.AWS_SECRET_KEY
+  region     = var.AWS_REGION
+}
+----------------------------------------------------------
+->instance.tf:
+
+resource "aws_instance" "Flipcart" {
+  ami           = lookup(var.AMIS, var.AWS_REGION, "")
+  instance_type = "t2.micro"
+}
+
+variable "AKIAW4OFZFTU4OKJDOOO" {
+}
+
+variable "f/JTv61S4Qc0tFPwanaNgWFn6ssNkrLwsTCyoX4V" {
+}
+
+variable "AWS_REGION" {
+  default = "us-east-1"
+}
+---------------------------------------------------------
+vars.tf:
+
+variable "AMIS" {
+  type = map(string)
+  default = {
+    us-east-1 = "ami-13be557e"
+    us-west-2 = "ami-06b94666"
+    eu-west-1 = "ami-0d729a60"
+  }
+}
+-----------------------------------------------------------
+->version.tf
+
+terraform {
+  required_version = ">= 0.12"
+}
+-----------------------------------------------------------------------------------------------
+
+4)single instance creation :
+
+
+provider "aws" {
+  region     = "us-east-1"
+  access_key = "AKIAXZWONNXRTUNWXR5X"
+  secret_key = "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"
+}
+data "aws_ami" "Pavan_ami" {
+  most_recent      = true
+  owners           = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm*"]
+  }
+}
+resource "aws_instance" "Pavan-1" {
+  ami           = data.aws_ami.surish_ami.id
+  instance_type = var.instance_type
+}
+
+variable file for single instance_type:
+---------------------------------------------
+variable "instance_type" {
+    default = "t2.micro"
+}
+
+-------------------------------------------------------------------------------------------
+5)multiple instance creation:
+
+provider "aws" {
+  region     = "us-east-1"
+  access_key = "AKIAXZWONNXRTUNWXR5X"
+  secret_key = "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"
+}
+data "aws_ami" "Pavan_ami" {
+  most_recent      = true
+  owners           = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm*"]
+  }
+}
+resource "aws_instance" "Pavan-1" {
+  ami           = data.aws_ami.surish_ami.id
+  instance_type = var.instance_type[0]
+}
+resource "aws_instance" "Pavan-2" {
+  ami           = data.aws_ami.surish_ami.id
+  instance_type = var.instance_type[1]
+}
+resource "aws_instance" "Pavan-3" {
+  ami           = data.aws_ami.surish_ami.id
+  instance_type = var.instance_type[2]
+}
+
+variable file for two or more instance_type:
+----------------------------------------------
+
+variable "instance_type" {
+    type = list
+    default = ["t2.micro","t2.nano","t2.medium"]
+}

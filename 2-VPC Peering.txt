@@ -1,0 +1,33 @@
+Virtual Private Cloud peering
+
+VPC peering allows you to connect two VPCs to communicate with each other as if they were on the same or different network.
+
+Creation:
+
+1)Sign in to the AWS Management Console
+
+2)Go to the VPC Dashboard-> Create two newtworks in two regions -> Launch two instances in that networks
+  Now we need to establish the connection between that two networks.
+
+3)In the VPC Dashboard, select Peering Connections.
+
+Create Peering Connection:
+
+Click "Create Peering Connection".
+Enter a name for the peering connection.
+Select the VPC you want to peer with from the dropdown menu.
+Click "Create Peering Connection".
+Accept Peering Connection:
+
+4)After creating the peering connection, select it from the list of peering connections.
+Click Actions and then "Accept Request".
+Review the details and click "Yes, Accept" to confirm.
+Configure Route Tables:
+
+5)Go to the "Route Tables" section in the VPC Dashboard.
+Edit the route table associated with each VPC involved in the peering connection->
+Add a route entry for the CIDR block of the peer VPC-> pointing to the peering connection.
+
+6)Verify connectivity between instances 
+  Connect one instance through putty -> Now try to connect other instance unsing ping command
+  If It will connect the connection will establish btw two netwoks.

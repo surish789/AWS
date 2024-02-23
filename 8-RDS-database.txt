@@ -1,0 +1,31 @@
+Relational Database Service(RDS)
+
+RDS (Relational Database Service) is a managed database service provided by Amazon Web Services (AWS) 
+that simplifies the setup, operation, and scaling of relational databases in the cloud. 
+It supports various database engines such as MySQL, PostgreSQL, Oracle, SQL Server, and Amazon Aurora, 
+allowing users to deploy, manage, and maintain databases without the overhead of traditional database management tasks like
+hardware provisioning, patching, backups, and replication.
+
+Creation:
+
+1)Sign in to the AWS Management Console
+
+2)In the AWS Management Console-> search for RDS or find it under the "Database" section.
+
+3)Create Subnet Group
+  Give it name, VPC, Availability zone, Subnets(3)
+
+4)Create a Database Instance:
+  Click on "Create database".
+  Choose the database engine you want to use (e.g., MySQL, PostgreSQL, Oracle).
+  Select the version of the database engine.
+  Choose which Template (e.g., production, development/testing).
+  Availability and Durability- Multy Az-DB Instance
+  Set up Storage, connectivity options, including VPC, subnet group, and security group.
+  Enter the master username and password for the database.
+  Click ->Create database(Go to connection and security-> Copy the end point)
+
+5)Download MySQL Workbench
+  Connect databases-> Paste end point at Host name surface
+  It will connect MySQL Database
+

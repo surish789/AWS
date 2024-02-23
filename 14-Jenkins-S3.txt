@@ -1,0 +1,56 @@
+
+1)Launch Instace Ec2 redhat instance(t3 micro)
+  Advance details ->User data->paste script here
+  (or) launch instance ->vi jenkins.sh(save->esc:wq!)
+  run-> sh jenkins.sh
+
+#!/bin/bash
+yum install wget zip unzip -y
+sudo yum install java-11-openjdk-devel -y
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.84/bin/apache-tomcat-9.0.85.zip
+unzip apache-tomcat-9.0.85.zip
+mv  apache-tomcat-9.0.85 /opt/tomcat
+chmod 755 -R /opt/tomcat
+/opt/tomcat/bin/startup.sh
+wget https://updates.jenkins.io/download/war/2.397/jenkins.war
+cp jenkins.war /opt/tomcat/webapps
+yum install git -y
+
+2) we need to copy jenkins.war file to apche tomcat -webapps
+  ->cd /opt/tomcat/webapps
+
+3)Browse publicIP:8080-> apche tomcat will open
+  publicIP:8080/jenkins-> Jenkins dash board also open
+
+It will give one path 
+copy that path 
+and paste in putty(Use "cat" before path-it will show password)
+Copy password and paste in jenkins dash board
+Give U_ID and Password
+Install Plugins
+Jenks dash board will open
+
+4)Now we need to give S3 bucket full access to the server
+  IAM->roles->create role->AWS Service->use case:ec2->S3FullAccess,AdminAccess-> create role
+  Ec2 instance ->Actions->Security->Modify IAM Role->Attach-> Update the IAM role
+
+5) We need to Install Plugins
+  Manage Jenkins->Manage Plugins->S3 Publiser, Maven Integration, maven Artifactory
+  Manage jenkins->tools->maven installations->add maven->name:maven
+  version:3.6.1 (Apply-save)
+  Manage Jenkins-> System-> S3 profile-> name: S3 bucket name, use IAM role(Apply-save)
+
+6)New Item-> S3 Articat-> Maven Project(Ok)
+  git hub -> url "https://github.com/chinna421/hello-world.git
+  root POM: pom.xml
+  Goals and options: clean install package
+  Post build action:Publish artifacts to S3 bucket
+  files to upload: **/webapps/target/*.war
+  exclude: /webapps/target
+  Destination: give another bucket name
+  Bucket region: select your region
+  (Apply-save)
+  Build now-Succes
+
+7) Now check Destination S3 Bucket
+  Under webapps-target war file successfully copied.

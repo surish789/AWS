@@ -1,0 +1,97 @@
+
+Tools: Ansible, cheff, puppet
+
+Ansible:
+-develop by redhat
+-Open source
+-configuration mgmt tool(we can trigger and deploy number of tasks at a time)
+-Componants: Play books(yaml scripts-(.yml)), config mgmt file, Deployment
+(yaml- yet another markup lanuguage)
+-Using playbooks we can deploy, manage, build, test, Configuration mgmt
+-Ansible written in python(By default)
+-push based machanism
+-It will install ACM only, no need to install nodes thats why we called agent less Architechture
+-main configuration file = /etc/ansible/ansible.cfg
+
+------------------------------------------------------------------------------
+Componants:
+1)ACM(Ansible control manager/master)
+- Only one
+- Install Ansible 
+2)Nodes/targeet machines
+- N number of nodes
+- No need to install ansible
+
+-> we will write playbooks in ansible control master but this action reflect on nodes.
+-> thats why its also called push based method/Agent less architecture.
+-> communication between master And node is SSH, Protocol is TCP/IP Protocol
+-> All instances (Master and nodes) should be same availability zone
+
+---------------------------------------------------------------------------------------
+Cheff and pupper:
+-> it is a client server architecture
+-> 1 Server(Node),No of clients(Master) 
+-> Agent architecture. so, we need to install ansible in both servers -server and client
+-> Cook books (DSL -Groovy scripts)
+-> Pull based machanism
+-> we don't get a python script by default
+-> there are no modules configuration tasks.
+--------------------------------------------------------------------------------
+
+-Ansible through we can launch ec2 instance for that we need to install pip
+-Take one Instance -name: Ansible-master
+-take Ubuntu machine- keypaiar-pem
+-Connect server
+-sudo -i
+
+(Search-install ansible in ubuntu 20.04 step by step- Digital ocian)
+->sudo apt-add-repository ppa:ansible/ansible
+->sudo apt update
+->sudo apt install ansible
+-ansible --version
+
+(we need ti install pip coz we have boto file boto file have all aws services)
+(how to install pip on ubuntu 2024)
+
+->sudo apt install python3-pip
+->pip3 --version
+->pip install boto3
+-> find / -name boto
+-> cd /usr/local/lib/python2.8/dist-packages/boto
+->ls
+->cd [enter]
+->vi ~/.boto
+-[Credentials]
+aws_access_key_id = YOUR_ACCESS_KEY
+aws_secret_access_key = YOUR_SECRET_KEY
+->git clone https://github.com/techtutorials/ansible-palybooks.git
+->ls
+->cd ansible-playbook/
+->ls
+->cd Ec2
+->ls
+->cat spinawsec2.yml
+->vi spinawsec2.yml
+[give our key pair name]
+-count:1
+-ecc:wq!
+(now we run ansible playbook)
+->ansible-playbook spinawsec2.yml
+check: go to console -two instances created
+->vi terminate.yml
+[instance id's=give our instance ID]
+-> ansible-playbook terminate.yml
+(it will deleted Instaces)
+-----------------------------------------------------------------------
+->vi apache.yml
+"----
+- hosts: localhost
+  tasks:
+    - name: install apache2
+      apt: name=apache2 update_cache=yes state=latest"
+
+->ansible-playbook apache.yml
+->systemctl start apche2
+->systemctl status apache2
+[Copy IP and check in browser]
+

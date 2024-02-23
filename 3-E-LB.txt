@@ -1,0 +1,41 @@
+Elastic Load Balancer:
+
+An Elastic Load Balancer (ELB) in AWS evenly distributes incoming traffic across multiple targets, 
+such as EC2 instances or containers, to improve application availability, scalability, and fault tolerance.
+
+Creation:
+
+1)Sign in to the AWS Management Console
+
+2)Create VPC and 3 subnets-> Launch 3 instances in 3 subnets name it is Webserver1,2,3.
+
+3)install nginx server
+  sudo amazon-linux-extras list | grep nginx
+  sudo amazon-linux-extras enable nginx1
+  sudo yum clean metadata
+  sudo yum -y install nginx
+  service nginx start
+  systemctl start nginx.service 
+  set the name WEBSERVER-1 path-echo "<h1>WEB SERVER-1</h1" > /usr/share/nginx/html/index.html
+  copy the ipv4 dns public ip and paste the new tab
+  verify nginx server installed or not
+  create same as remine two instances
+  create a Target group mention on HTTP or TCP and port 80
+  add the instances and insert the pending instances 
+  create a target group and check the status helathy 
+
+
+3)Create a Load Balancer:
+
+  Select Load Balancers-> Create Load Balancer.
+  Choose the type of load balancer you want to create: Application LB, Network LB, or Classic LB.
+  Now we create Network LB- It will distribute number of requexsts to serevers
+
+  Configure the load balancer-> name, scheme (internet-facing or internal), listeners, and availability zones.
+
+  Configure Listeners:
+  Define the listeners for your load balancer, specifying the protocol and port for incoming traffic.
+  add the security group & target group & avalibility zones(minimum 2 avalibility zones)
+
+4)copy the load balancer DNS and paste the new tab 
+  switching the webserver or not and verified it

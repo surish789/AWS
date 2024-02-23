@@ -1,0 +1,106 @@
+1)Take One Ec2 instance
+  give inbound rule-> any where traffic
+  connect through putty
+ 
+2)Now we need to install java and jenkins
+
+->sudo yum install -y java
+->sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+->sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+->yum install jenkins
+->systemctl start jenkins.service
+->systemctl status jenkins.service
+
+3)copy publicIP:8080 paste in browser
+ Jenkins dash board will open
+
+It will give one path 
+copy that path 
+and paste in putty(Use "cat" before path-it will show password)
+Copy password and paste in jenkins dash board
+Give U_ID and Password
+Install Plugins
+Jenks dash board will open
+
+4)Need to install plugins(3types)
+Manage jenkis->Plugins-> Available plugins-> Search and install
+Git: pipeline, parameter, git hub integration, git hub auth,
+ git hub pull req builder,pipeline git hub
+
+5)Create Project(Automation) 
+Take New Item-> name it as Terraform project
+  There are Two types automation pipelines 
+
+1)Declarative- start with pipeline
+2)Scriptive- Start with Node 
+
+Select Pipeline script-> paste code in the script:
+PipeLine Code:
+pipeline{
+    agent any
+    tools {
+        terraform 'terraform-11'
+    }
+    stages{
+        stage('Git Checkout'){
+            steps{
+               git credentialsId: 'GIT_CRED', url: 'https://github.com/crk-2020/iac-demo.git' 
+            }
+        }
+        stage('Terraform init'){
+            steps{
+                sh label:'',script: 'terraform init'
+            }
+        }
+         stage('Terraform Apply'){
+            steps{
+                sh label:'',script: 'terraform apply --auto-approve'
+            }
+        }
+    }
+}
+
+
+6) Set Up Terraform and Git
+->sudo yum update -y
+->sudo yum install git -y
+->git --version
+
+-> Download the Terraform binary 
+->wget https://releases.hashicorp.com/terraform/1.7.3/terraform_1.7.3_linux_amd64.zip
+
+-> Unzip the downloaded file
+->unzip terraform_1.7.3_linux_amd64.zip
+
+-> Move the binary to a directory in your PATH (/usr/local/bin)
+->sudo mv terraform /usr/local/bin/  or cp terraform /usr/bin
+
+-> Verify the installation
+->terraform --version
+
+->terraform (commands will come)
+
+7)Now to to Jenkins Dash board -> go to pipeline syntax
+  Sample step: git:Git
+  give git repositpry url-> Kind : SSH user name with private key, username:ec2-user
+  Select private key -paste your ppk key here(Add)
+  genarate a pipeline script-Copy the ID paste in our code(Stages steps)
+  Apply-save
+
+8)we need to add some plugins
+  Dashboard->Manage jenkins->plugins->available plugins->terraform(Install)
+  Dashboard->Manage jenkins->tools->terraform installations->add terraform->
+  name:terraform-11
+  Install dir:/usr/bin(apply-save)
+
+9)We need to give permissions to this Ec2 instance so, create one role
+  IAM->roles->craete role->AWS Service->use case:ec2->AdminAccess-> create role
+  Ec2 instance ->Actions->Security->Modify IAM Role->Attach-> Update the IAM role
+
+10) Now we need to Build our project
+  Build now->Success
+  check in ap-south1 region-> Our VPC will created
+
+
+
+

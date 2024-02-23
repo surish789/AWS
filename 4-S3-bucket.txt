@@ -1,0 +1,39 @@
+Amazon S3 (Simple Storage Service)
+
+Amazon S3 (Simple Storage Service) is a cloud storage service provided by AWS that allows 
+you to store and retrieve data over the internet. It's designed for durability, scalability, and accessibility, 
+making it ideal for a wide range of use cases, from simple file storage to complex data analytics and backup solutions.
+
+Creation:
+
+1) Go to S3 In the AWS Management Console ->search for S3 section.
+
+2)Create a Bucket:
+ Click on Create bucket.
+ Enter name for your bucket (Must Give Unique name).
+ Select the region where you want to create the bucket(Its a global service) -> Create
+
+3)Configure Bucket Properties:
+  versioning, server access logging, and default encryption for your bucket.
+
+4)Set Bucket Permissions:
+  Bucket policies, access control lists (ACLs), or block public access settings. 
+  
+5)Upload Objects:
+ Click on your bucket name to open it.
+ Click on the Upload button.
+ Choose the files you want to upload from your local machine -> Upload
+ Every object have one object URL
+ Now goto object Actions-> making public using ACl ->Make public
+ 
+6)Manage Objects:
+ Once objects are uploaded, we can view, download, move, copy, or delete them within the S3 Management Console.
+
+7)Set Object Permissions:
+ This allows you to control access to specific objects within your bucket.
+
+8)Deleted objects retrive
+  Go to Bucket properties->Bucket versioning-> edit-> Enable bucket versioning-> save
+  Go to objects-> show versions on
+
+

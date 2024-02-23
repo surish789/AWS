@@ -1,0 +1,254 @@
+->Ansible(Configuration mgmt tool):
+
+-If we want 1000 servers within a hour we can do using Ansible
+-Also known as Automation tool
+
+Tools: Ansible, cheff, puppet
+
+Ansible:
+-develop by redhat
+-Open source
+-configuration mgmt tool(we can trigger and deploy number of tasks at a time)
+-Componants: Playbooks(yaml scripts-(.yml)), config mgmt file, Deployment
+(yaml- yet another markup lanuguage)
+-Using playbooks we can deploy, manage, build, test, Configuration mgmt
+-Ansible written in python(By default)
+-push based machanism
+-It will install ACM only, no need to install nodes thats why we called agent less Architechture
+-main configuration file = /etc/ansible/ansible.cfg
+
+------------------------------------------------------------------------------
+Componants:
+1)ACM(Ansible control manager/master)
+- Only one
+- Install Ansible 
+2)Nodes/targeet machines
+- N number of nodes
+- No need to install ansible
+
+-> we will write playbooks in ansible control master but this action reflect on nodes
+-> thats why its also called push based method/Agent less architecture
+-> communication between master And node is SSH, Protocol is TCP/IP Protocol
+-> All instances (Master and nodes) should be same availability zone
+
+---------------------------------------------------------------------------------------
+Cheff and pupper:
+-> it is a client server architecture
+-> 1 Server(Master),No of clients(Node) 
+-> Agent architecture. so, we need to install ansible in both servers -server and client
+-> Cook books (DSL -Groovy scripts)
+-> Pull based machanism
+-> we don't get a python script by default
+-> there are no modules configuration tasks.
+--------------------------------------------------------------------------------
+Ansible setup:
+-> Take 3 instances
+1-ACM
+2-two nodes/target machines
+
+-> Need to do SSH Configuration
+-Login Master server
+-sudo su -
+-vi /tmp/pavan.pem
+(paste pem file code here)
+-chmod 700 /tmp/pavan.pem
+
+-> Install Ansible
+-yum install -y ansible (or) sudo amazon-linux-extras install ansible2 -y (or) sudo amazon-linux-extras install epel -y
+-Ansible --version
+-mkdir pavan
+-cd pavan
+-vi ansible.cfg
+ [defaults]        -> (brackets menas groups)
+ inventory = ./myinventory
+-esc:wq!
+-vi myinventory
+s1 ansible_host=Private IP
+s2 ansible_host=Private IP
+
+[webservers]
+s1
+s2
+
+[allservers:children]
+webservers
+loadbalancers
+databases
+
+[allservers:vars]
+ansible_user=ec2-user
+ansible_ssh_private_key_file=/tmp/pavan.pem
+
+esc:wq!
+
+check communication:
+-ansible all -m ping
+-yes
+(we can get resoponse pong)
+-yes
+success.
+----------------------------------------------------------------------------------------------------
+(Real time setup)
+->Take 3 instances- ACM,Node1,Node2
+-login master connect through putty
+
+-> Need to do SSH Configuration
+-Login Master server
+-sudo su -
+-vi /tmp/pavan.pem
+-chmod 700 /tmp/pavan.pem
+
+-> Install Ansible
+-yum install -y ansible (or) sudo amazon-linux-extras install ansible2 -y (or) sudo amazon-linux-extras install epel -y
+-Ansible --version
+-configuration file = /etc/ansible/ansible.cfg
+-vi /etc/ansible/ansible.cfg
+-inventry file = /etc/ansible/hosts (remove #)
+-vi /etc/ansible/hosts  (webserver group info, DB server group info)
+ [webserver] (remove #)
+172.31.39.144 ansible_user=ec2-user ansible_connection-ssh ansible_ssh_private_key_file=/tmp/pavan.pem 
+172.31.46.197 ansible_user=ec2-user ansible_connection=ssh ansible_ssh_private_key_file=/tmp/pavan.pem
+(we gave nodes info in the webserver)
+-esc:wq!
+Check communicate or not?
+-ansible all/Private-IP/webservers -m ping
+-yes
+(we get pong response)
+-----------------------------------------------------------------------------------------------------
+Check in Nodes:
+
+﻿ansible all -m shell -a date: It will display date from all host machines.
+ansible all -m ping: It will ping all the servers which you have mentioned in inventory file (/etc/ansible/hosts) 
+ansible all -m ping -o: It will display the output in single line.
+ansible all -m shell a 'uptime' Uptime of all the machines. Here m means module and a means argument
+ansible all -m shell a 'service httpd status': Check the service status on all the machines.
+
+------------------------------------------------------------------------------------------------------
+ansible ad hoc commands:
+
+->﻿ansible all -m yum -a "name=httpd state=present" --become 
+->ansible all -m service -a "name=httpd state-started" --become 
+-ansible --version
+->ansible all -m ping
+->ansible all -m yum -a "name=git state-present" --become
+-git --version
+->ansible webservers -m yum -a "name=git state=absent" -- become
+ ->ansible webservers -m yum -a "name=httpd state-absent" --become 
+->ansible webservers -m yum -a "name=httpd state=present" --become
+-service httpd status
+-ansible webservers -m service -a "name=httpd state=started" --become
+->ansible webservers -m service -a "name=httpd state-started" --become touch chiru
+-1s
+->ansible all -m copy -a "src=/home/ansible/chiru dest=/home/ansible" -- become
+-pwd
+-1s
+->ansible webservers -m command -a 'ifconfig' --become
+﻿->ansible webservers -m command a 'ifconfig' -become 
+->ansible 172.31.10.238 -m command -a 'uname -a' --become 
+->ansible 172.31.2.79 -m command -a 'uname -a' -- become 
+->ansible 172.31.8.70 -m command -a 'uname -a' --become 
+->ansible all -m command a 'uname -a' -become
+->ansible all -m command a 'df -h' --become 
+->ansible all -m command -a 'free -m' -become 
+->ansible all -m command -a 'fdisk -1' --become 
+->ansible all -m command a 'lsblk' --become
+->ansible-doc -1
+-history
+------------------------------------------------------------------------------------------------------------------------
+-> Playbook(yaml)
+playbookname extension  (.yml or .yaml)
+playbook playbook contains list of plays / tasks and tasks contains list of modules, modules will execute entire playbook.
+
+ansible-playbook playbookname ( to run a playbook)
+ansible-playbook copy.yml (play book to run)
+ansible-playbook playbookname --syntax-check (syntax check).
+ansible-playbook playbookname --check  (dry run mode-this command will tell what this task run).
+-------------------------------------------------------------------------------------------------------------------------
+(now we will connect ping via playbook so, we need to create one yaml file)
+-vi ping.yml
+---
+-hosts: all
+ gather_facts: no
+ remote_user: ec2-user
+ tasks:
+   - name: Test connection
+     ping:
+     remote_user: ec2-user
+...
+(esc:wq!)
+->ansible-playbook ping.yml --syntax-check (any mistackes in syntax it will show you)
+->ansible-playbook ping.yml --check  (it will tell what this task run).
+->ansible-playbook ping.yml (run the playbook)
+-------------------------------------------------
+
+(Now we need to craete one file using playbook)
+-vi file.yml
+---
+- hosts: localhost
+  tasks:
+   - name: Create a file
+     file:
+      path: /home/ec2-user/pavan
+      state: touch
+... 
+(esc:wq!)
+----------------------------------------------------
+
+(Now we will install git and as well as clone git repo)
+-vi git.yml
+ - hosts: localhost
+   become: yes
+   tasks:
+    - name: Install Git
+      yum: name=git state=present
+    - name: git clone
+      git:
+       repo: 'https://github.com/pavananingi/myweb.git'
+       dest: /home/ec2-user/myweb
+->esc:wq!
+->ansible-playbook git.yml
+->git --version
+->vi git.yml
+ - hosts: webservers  (install git in nodes also)
+   become: yes
+   tasks:
+    - name: Install Git
+      yum: name=git state=present
+    - name: git clone
+      git:
+       repo: 'https://github.com/pavananingi/myweb.git'
+       dest: /home/ec2-user/myweb
+->(esc:wq!)- check in nodes
+----------------------------------------------------------
+(Now install apache)
+-vi http.yml
+---
+- hosts: all 
+  become: true 
+  tasks:
+I    -name: Install Apache HTTP server
+      yum: name=httpd update_cache=yes state=latest
+     -name: Start HTTP Server
+      service: name=httpd enabled=yes stage=started
+     -name: Insert Index Page
+      template:
+       src: index.html
+       dest: /var/www/html/index.html
+...
+(esc:wq!)
+->vi index.html (add some data)
+(esc:wq!)
+->ansible-playbook http.yml
+----------------------------------------------------------------------------
+
+
+
+
+﻿
+->ansible integrate with jenkins and application deployment.
+step 1: publish overssh: plugin install
+step 2: configure ssh configuration between jenkins and ACM.
+step 3: jenkins dash board ==>> configure system ==>> ACM ==>> credentials (username and password)
+step 4: ACM copy1.yml --->>> war copy to tomcat webapps >>> don't run.
+Step 5: Nodel: tomcat install
+----------------------------------------------------------------------------------------------------------------------------

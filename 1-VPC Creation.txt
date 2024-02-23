@@ -1,0 +1,32 @@
+Virtual Private Cloud(VPC)
+
+A VPC (Virtual Private Cloud) is a virtual network in the cloud that lets you launch AWS resources, 
+like servers and databases,in a controlled and isolated environment. 
+It's like having your own slice of the internet within AWS, 
+where you can define your IP address range, create subnets, and set up security measures to protect your resources.
+
+Creation:
+
+1) sign in to your AWS account.
+2) Go to All Services -> Network & Content delivery -> Select VPC.
+3) Create VPC.
+   Enter name and Give IPv4 CIDR. Ex: 192.168.0.0/16(Which means we have 65k Network IP's) -> Create.
+
+4) Create Subnet
+   give name and CIDR. Ex: 192.168.1.0/24 (which means we have 255 Network IP's) -> Create
+   Go to Actions-> Edit subnet settings-> Enable Auto assign IP.
+
+5) Create Internet gateway
+   Create->Enter a name for the gateway ->Create
+   Go to Actions ->Attach Internet gateway to VPC.
+
+6) Configure Route Tables
+   Goto route table-> select IGW-> edit subnet association-> select all subnets-> Save associations
+   goto routes-> edit routs -> add a route for internet access (0.0.0.0/0) pointing to the internet gateway.
+
+7) Security Groups
+   Configure security groups to control inbound and outbound traffic.
+
+8) Launch Ec2 Instance 
+   Now Launch Ec2 Instance with using existing Network.
+

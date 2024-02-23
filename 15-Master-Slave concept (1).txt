@@ -1,0 +1,116 @@
+Purpose:
+-Regularly we can create Lots of jobs created in Jenkins, 
+ Load will increse(Memory/CPU/Network utilization) that time server will goes hung state,
+ That time deplyment is not possible,
+-So, using this concept We can distribute the Builds. 
+
+Master: 
+-where we install jenkins that instance is called master(Java Installation Manditory)
+-It will be the Only one
+
+Slave:
+-We create multiple instances for slaves
+-They can be any number
+-We need to install Apache tomact in each slave instance
+
+->We created Jobs in Master and that jobs are build in slave instance/Nodes
+->The communication between master and slave is SSH
+->The communication between master and slave protocol is TCP/IP
+->Each node can be treated as one environment(Dev,QA,UAT,Prod)
+->the jobs are running between master and slave by using labels.
+->No OS dependency between master and slave
+->Master and Slave must be in same Availablity zone and same network
+--------------------------------------------------------------------------------
+
+1)Take two instances- Master and slave
+ -Login master connect therough putty-> root user
+  Install Java,Jenkins,git,tomcat,maven
+
+->sudo yum install -y java
+
+->sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+->sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+->yum install jenkins
+->systemctl start jenkins.service
+->systemctl status jenkins.service
+
+->sudo yum install git -y
+->git --version
+
+->wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.85/bin/apache-tomcat-9.0.85.tar.gz
+->tar -xvf apache-tomcat-9.0.85.tar.gz
+->cd apache-tomcat-9.0.85
+->chmod 777 webapps/
+->vi /opt/tomcat/webapps/manager/META-INF/context.xml(Remove Value & allow line)
+->vi conf/apache-tomcat-user.xml
+ <role rolename="manager-gui"/>
+ <role rolename="manager-script"/>
+ <user username="pavan" password="pavan" roles="manager-gui,manager-script"/>
+
+->wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
+->tar -xvf apache-maven-3.9.6-bin.tar.gz
+->mvn --version
+
+--------------------------------------------------------------------------------------------
+
+2)Login Slave- first time slave connect to master so, 
+  we need to install java in slave also.
+
+Connection: (Master to Slave Connection)
+
+Open Jenkins Dash board
+-> Manage jenkins
+-> Manage nodes and clouds
+-> +New node
+-> name:dev_node
+-> type:permenant agent(create)
+-> Number of execution: 3(CPU utilization)
+-> remote root directory: /home/ec2-user/jenkins
+-> Labels: dev ( need to match in master)
+-> Usage : only build jobs with label
+-> Launch method : Launch agent via ssh
+-> Host : Slave Private IP
+-> Credentials : Jenkins
+-> kind: ssh username with private key
+-> username : Ec2-user
+-> Private key:Pem file key paste(Add)
+-> Host key verfication Stratagy: Non verifying stratagy(Save)
+ (Slave added successfully)
+---------------------------------------------------------------
+
+3) Now we need to create jobs
+-> +new Item
+-> name: sample (Free style)
+-> Build-> Add build step-> Execute shell
+   echo "welcome to jenkins master/slave architecture!"
+   General-> restrict where this project can be run 
+   Label expression: dev (Apply - save)
+(This job will run in slave- check console output)
+ls -> cd Jenkins -> workspace-> cd workspace -> ls -sample
+--------------------------------------------------------------
+
+4)Need to install git and maven and tomcat in slave also
+-> +New Item-> Name: Project2(Free style)
+-> General->Restrict where this project can be run-> dev
+-> SCM -> git-> Url: Git url
+-> Build-> Add build step :invoke top level maven->goals: clean package
+  (Apply-save) -> success
+-War file genarated
+-(now we need to copy war file into webapps folder in slave)
+-We need to install one plug in -> manager jenkins-manage plugins-Available plugins: Deploy to container
+
+go to Project2 -> configue->  post build: Deploy war/ear to container
+war/ear: target/*.war
+context path: myweb
+container: tomcat 9 remote
+credentials: pavan
+password: pavan (Add)
+Tomcat url: paste(Apply-save)-> Build now
+
+check tomcat our myweb file will be genarated 
+------------------------------------------------------------------------
+
+We also Do pollSCM here
+Project2->Configure->Build triggers->PollSCM:*****(Apply-save)
+Modify some code and check in Browser it will automaticatty changed
+

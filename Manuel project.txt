@@ -1,0 +1,90 @@
+Project1:
+
+Developed by Apache
+Supports only java code
+It converts java Language to binary language
+=>(pom.xml)
+->mvn where install
+->version,model
+->Group ID(Project name)
+->Artifact ID(Fetures)
+->Versions ID 8.2.1 (Major release(8), Minor relese(2), hotfixes/bugs(1))
+->Packges-war
+->properties-sonarqube link(Code quality check)
+->Dependencies 7.0.0
+->Distribution management (Nuxes url-war)
+--------------------------------------------------------------------------
+open maven- 
+install java -> sudo yum install -y java
+Install git -> yum install -y git
+Install maven ->
+cd /etc/maven
+wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
+tar -xvf apache-maven-3.9.6-bin.tar.gz
+mvn --version
+git clone myweb
+cd  (repo)
+mvn clean package
+cd target
+ls (we will get war file now we need to copy this in tomcat server)
+------------------------
+Open Tomcat server in putty
+install java
+install tomcat
+cd apchetomcat
+cd webapps
+pwd (copy path) -/root/apache-tomcat-9.0.85/webapps
+(Now we need to give permisions to webapps)
+chmod 777 webapps/
+
+--------------------------------
+open mvn server
+(Now we need to do ssh configuration)
+take pem file
+vi /tmp/pem file.pem (Enter)
+(paste pem file code here) esc:wq!
+chmod 700 /tmp/pemfile.pem
+(we need to copy war file)
+scp -i /tmp/pem file.pem myweb ec2-user Tomcat publicIP or PrivateIP:paste tomcat war file copy here
+---------------------------------
+open tomcat server
+check tomcat server we will get war file in webapps
+cd ..
+cd bin
+./startup.sh
+cd webapps
+ls (we will get unzip file-dir name)
+mv filename new name
+-------------------------------------------
+copy tomcat public Ip
+paste in browser - Public IP:8080/dir name(which we get in tomcat server unzip file)
+------------------------------------------------------------------------------------------
+(Now we to provide security)
+open tomcat server
+cd webapps/manager/META-INF
+ls
+context.xml
+vi context.xml
+(Now we need to delete value and manager) (ecs+dd- entire line delete)
+esc:wq!
+cd ..
+cd ..
+(Now go to conf dir and create user)
+cd conf
+ls
+vi tomcat-users.xml
+come down 
+insert mode
+--> copy and paste first 3lines of last 5 lines
+role name- manager-gui
+role name- manager-script
+user name- pavan & Pavan@9505 roles-maanger-gui,manager-script
+esc:wq!
+cd bin
+./shutdown.sh
+./startup.sh
+-----------------------------------------
+Now check
+public IP:8080
+u_id and Password
+

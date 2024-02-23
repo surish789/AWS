@@ -1,0 +1,61 @@
+Apche tomcat:
+
+1)Launch an EC2 Instance
+
+2)Sign in to the AWS Management Console.
+ Navigate to the EC2 dashboard.
+ Launch a new EC2 instance. Choose an Amazon Linux, Ubuntu.......
+
+3)Connect to Your EC2 Instance:
+ Once your instance is running, connect to it using Putty. 
+
+ Update Your System- 
+ -sudo yum update -y   (for Amazon Linux)
+ -sudo apt update && sudo apt upgrade -y   (for Ubuntu)
+
+  Install Java Development Kit (JDK)
+   Remove old version
+  -sudo yum remove java
+  -sudo yum install java-1.8.0-openjdk-devel   (for Amazon Linux)
+  -sudo apt install openjdk-8-jdk -y   (for Ubuntu)
+
+4)Download Apache Tomcat
+  Go to the Apache Tomcat website and download the latest version of Apache Tomcat.
+  Use wget or curl to download the binary distribution of Apache Tomcat directly to your EC2 instance.
+  https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.85/bin/apache-tomcat-9.0.85.tar.gz
+
+5)Extract Apache Tomcat
+  Use the following command to extract the downloaded Apache Tomcat archive
+  tar -xvf apache-tomcat-9.0.85.tar.gz
+
+6)Move Apache Tomcat Directory
+ Move the extracted Apache Tomcat directory to a suitable location.
+ sudo mv apache-tomcat-9.0.85.tar.gz /usr/local/apache-tomcat
+
+7)Start Apache Tomcat
+ Change directory to the Apache Tomcat bin directory
+ -cd /usr/local/apache-tomcat/bin
+ Start Apache Tomcat -> startup.sh script
+
+8)Access Apache Tomcat
+ Open a web browser and navigate to your EC2 instance's public IP address or DNS name 
+ followed by port 8080 (Tomcat's default port). 
+ http://<Ec2-public-ip>:8080/
+
+9)Now We need to configure Manager app 
+ -vi /opt/tomcat/webapps/manager/META-INF/context.xml
+ Remove Value & allow line
+ Now shutdown the server
+./shutdown.sh
+
+10)Now we need to Add Users
+  Please the below text in the end of the file
+  To find it- vi conf/apache-tomcat-user.xml
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<user username="tomcat" password="tomcat" roles="manager-gui,manager-script"/>
+
+11) Now we need to start our Tomcat server
+  cd bin
+  ls
+ ./startup.sh

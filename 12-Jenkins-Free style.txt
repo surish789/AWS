@@ -1,0 +1,32 @@
+1)Take one Ec2 instance
+connect through putty
+
+2)Now we need to install java and jenkins
+
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+sudo yum install -y java
+yum install jenkins
+systemctl start jenkins.service
+systemctl status jenkins.service
+
+3)copy publicIP:8080 paste in browser
+Jenkins dash board will open
+
+It will give one path 
+copy that path 
+and paste in putty(Use cat before path-it will show password)
+Copy password and paste in jenkins dash board
+Give U_ID and Password
+Install Plugins-
+Jenks dash board will open
+
+4)Need to install plugins(3types)
+Manage jenkis->Plugins-> Available plugins-> Search and install
+Git: pipeline, parameter, git hub integration, git hub auth,
+ git hub pull req builder,pipeline git hub
+
+5)Create Project(Free style)
+New Item->give name->freestyle project->This project is parameterised-> add parameter
+-> String parameter-> Name:messge (apply-save)
+check: cd /var/lib/jenkins/workspace -> there we can find our projects

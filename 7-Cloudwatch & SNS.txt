@@ -1,0 +1,21 @@
+Cloudwatch
+
+In cloudwatch we have alarms for example choose the ec2 instance under actions select monitor and troubleshoot in the monitoring view 
+select manage cloudwatch alarms to configure alarms for the selected instance click Create Alarm to initiate the alarm creation process.
+Specify the metric to monitor (e.g., CPU utilization).Set threshold values, such as when the CPU utilization exceeds a certain percentage.
+Configure the period for which CloudWatch evaluates the metric.Define the time range during which CloudWatch monitors the specified metric.
+Adjust the evaluation period to ensure accurate and reliable alarms.Click Create to finalize the alarm configuration.
+Navigate to CloudWatch Alarms to verify the newly created alarm.Confirm that the alarm is active and properly configured.In the alarm details,
+set up actions for triggered states.Configure an SNS (Simple Notification Service) topic to send email notifications.Periodically check the
+CloudWatch Alarms dashboard to ensure the alarm is functioning correctly.Simulate scenarios or wait for actual events to trigger the alarm.
+
+
+SNS
+
+In Simple Notification Service(SNS) under the Application Integration section.Click on the Topics link in the left navigation pane.Click the 
+Create topic button.Enter a meaningful name for your topic in the Name field.Optionally, you can provide a display name.Click Create topic to 
+proceed.If needed, you can add permissions to your topic by clicking on the topic you just created, then selecting the Access policy tab.After 
+creating the topic, click on the topic name.Inside the topic details, click the Create subscription button.Choose the protocol (e.g., email, SMS, HTTP, etc.) 
+and provide the necessary information based on the selected protocol.Confirm the subscription.Depending on the subscription type, you might need to confirm 
+the subscription by following instructions sent to the subscribed endpoint (e.g., confirming a subscription via email).
+

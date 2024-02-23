@@ -1,0 +1,37 @@
+AWS Backup:
+
+AWS Backup is a fully managed backup service provided by Amazon Web Services (AWS) that makes it easy to centralize 
+and automate the backup of data across various AWS services, including Amazon EBS volumes, Amazon RDS databases, 
+DynamoDB tables, EFS file systems, and more. It simplifies the process of creating, managing, and restoring backups, 
+helping organizations protect their data and meet compliance requirements.
+
+Creation:
+
+1)Sign in to the AWS Management Console
+
+2)Navigate to AWS Backup-> In the AWS Management Console-> search for Backup
+
+3)Create a Backup Vault
+ Enter a name for your backup vault.
+
+4)Create Backup plan
+ Enter a name for your backup plan.
+ backup schedule (e.g., daily, weekly).
+ Specify backup retention settings (how long to retain backups).
+ Choose the resources (EC2 instances, RDS databases) to backup.
+ 
+5)Click Create plan
+ Assign Backup Plan to Resources:
+ After creating a backup plan, assign it to the resources you want to backup.
+ Select the backup plan you created.
+ Choose the resources from the list or define resource selection criteria.
+ Click "Assign plan".
+
+6)Initiate Backups:
+ Backup will automatically start creating backups 
+
+7)Restore:
+ To restore data from a backup-> go to the recovery points section in the AWS Backup console.
+ Select the recovery point you want to restore from.
+ Choose the resources to restore and specify the restore options.
+ Initiate the restore process.
