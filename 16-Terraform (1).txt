@@ -25,8 +25,8 @@ Terraform:
 
    provider "aws" {
   region     = "us-east-1"
-  access_key = "AKIAW4OFZFTU4OKJDOOO"
-  secret_key = "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"
+  access_key = "AWS_ACCESS_KEY"
+  secret_key = "AWS_SECRET_KEY"
 }
 ---------------------------------------------------------------------------------------------------------------
 ->Now we need to mension Providers-Cloud/AccountID-Region,Access-key,Secret-key
@@ -37,8 +37,8 @@ Terraform:
 ---------------------------------------------------------------------------------------------------------------  
 provider "aws" {
   region     = "us-east-1"
-  access_key = "AKIAW4OFZFTU4OKJDOOO"
-  secret_key = "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"
+  access_key = "AWS_ACCESS_KEY"
+  secret_key = "AWS_SECRET_KEY"
 }
 resource "aws_instance" "Flipcart" {
   ami                    = "ami-0cf10cdf9fcd62d37"
@@ -105,10 +105,10 @@ resource "aws_security_group" "pavan-vpc-sg" {
   }
 }
 ---------------------------------------------------------------------------------------------------------------
-->Open Terminal or CMD go to location -
-Terraform init- dependencies execution
-Terraform Plan- Infra creation code plan
-Terraform Apply- Plan Apply
+->  Open Terminal or CMD go to location -
+    Terraform init- dependencies execution
+    Terraform Plan- Infra creation code plan
+    Terraform Apply- Plan Apply
 ---------------------------------------------------------
 Diff btw Ingress and egress
 Ingress enables external traffic to reach containers, 
